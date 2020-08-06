@@ -16,5 +16,10 @@ func TestNew(t *testing.T) {
 			t.Errorf("'%s'という誤った文字列が出力されました", buf.String())
 		}
 	}
-	t.Error("まだテストを作成していません")
+}
+
+func TestOff(t *testing.T) {
+	// var silentTracer Tracer = Off()
+	var silentTracer Tracer
+	silentTracer.Trace("データ")
 }
