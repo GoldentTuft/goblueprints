@@ -10,6 +10,8 @@ import (
 	"sync"
 
 	"github.com/GoldentTuft/goblueprints/trace"
+	"github.com/stretchr/gomniauth"
+	"github.com/stretchr/gomniauth/providers/google"
 )
 
 // templ は1つのテンプレートを表します
@@ -31,7 +33,16 @@ func (t *templateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	var addr = flag.String("addr", ":8080", "アプリケーションのアドレス")
+	var skey = flag.String("skey", "", "セキュリティキー")
+	var googleCID = flag.String("googleCID", "", "クライアントID")
+	var googleSV = flag.String("googleSV", "", "秘密の値")
 	flag.Parse()
+	// Gomniauthのセットアップ
+	gomniauth.SetSecurityKey(*skey)
+	gomniauth.WithProviders(
+		google.New(*googleCID, *googleSV,
+			"http://localhost:8080/auth/callback/google"),
+	)
 	r := newRoom()
 	r.tracer = trace.New(os.Stdout)
 	http.Handle("/chat", MustAuth(&templateHandler{filename: "chat.html"}))
