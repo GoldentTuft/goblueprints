@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -34,17 +33,23 @@ func (t *templateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	var addr = flag.String("addr", ":8080", "アプリケーションのアドレス")
-	var skey = flag.String("skey", "", "セキュリティキー")
-	var googleCID = flag.String("googleCID", "", "クライアントID")
-	var googleSV = flag.String("googleSV", "", "秘密の値")
 	flag.Parse()
-	fmt.Println("日本語のテスト")
-	fmt.Println(os.Getenv("skey"))
-	os.Exit(1)
+	skey := os.Getenv("skey")
+	if skey == "" {
+		log.Fatal("skey(セキュリティキー)がない")
+	}
+	googleCID := os.Getenv("googleCID")
+	if googleCID == "" {
+		log.Fatal("googleCID(クライアントID)がない")
+	}
+	googleSV := os.Getenv("googleSV")
+	if googleSV == "" {
+		log.Fatal("googleSV(秘密の値)がない")
+	}
 	// Gomniauthのセットアップ
-	gomniauth.SetSecurityKey(*skey)
+	gomniauth.SetSecurityKey(skey)
 	gomniauth.WithProviders(
-		google.New(*googleCID, *googleSV,
+		google.New(googleCID, googleSV,
 			"http://localhost:8080/auth/callback/google"),
 	)
 	r := newRoom()
