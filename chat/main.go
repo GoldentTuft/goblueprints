@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -37,6 +38,9 @@ func main() {
 	var googleCID = flag.String("googleCID", "", "クライアントID")
 	var googleSV = flag.String("googleSV", "", "秘密の値")
 	flag.Parse()
+	fmt.Println("日本語のテスト")
+	fmt.Println(os.Getenv("skey"))
+	os.Exit(1)
 	// Gomniauthのセットアップ
 	gomniauth.SetSecurityKey(*skey)
 	gomniauth.WithProviders(
